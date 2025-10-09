@@ -1,0 +1,75 @@
+var addPaciente = document.querySelector('#adicionar-paciente');
+
+addPaciente.addEventListener('click', 
+    function (event){
+        event.preventDefault();
+
+        // seleciona o formulário
+        var form = document.querySelector('#form-adiciona');
+
+        //Variáveis para acessar o valor do <input> a partir do name
+        var paciente = dadosPacientesFormulario(form);
+        var pacienteTr = criaTr(paciente);
+
+        var erros = validarPaciente(paciente);
+        if(erros.length > 0){
+            var mensagemErro = document.querySelector("#mensagem-erro");
+            mensagemErro.textContent = erros;
+            console.log("Paciente Inválido");
+            return;
+        }
+
+        var tabela = document.querySelector("#tabela-pacientes")
+        tabela.appendChild(pacienteTr);
+        form.reset();
+
+
+    }
+);
+
+function dadosPacientesFormulario(form){
+
+
+    var paciente = {
+        nome: form.nome.value,
+        peso: form.peso.value,
+        altura: form.altura.value,
+        gordura: form.gordura.value,
+        IMC: calculaIMC(form.peso.value, form.altura.value)
+    }
+
+    return paciente;
+};
+
+function criaTr(paciente){
+      // cria o elemento <tr>
+      var pacienteTr = document.createElement("tr");
+      pacienteTr.classList.add("paciente");
+     
+      pacienteTr.appendChild(criaTd(paciente.nome, "info-nome"));
+      pacienteTr.appendChild(criaTd(paciente.peso, "info-nome"));
+      pacienteTr.appendChild(criaTd(paciente.altura, "info-nome"));
+      pacienteTr.appendChild(criaTd(paciente.gordura, "info-nome"));
+      pacienteTr.appendChild(criaTd(paciente.IMC, "info-nome"));
+
+      return pacienteTr;
+};
+
+function criaTd(dado, classes){
+
+    var td = document.createElement("td");
+    td.innerText = dado;
+    td.classList.add(classes);
+    return td;
+};
+
+function validarPaciente(paciente){
+
+    var erros = [];
+
+    if(!validarPeso(paciente.peso)) erros.push("Peso Inválido!");
+    
+    if(!validarPeso(paciente.altura)) erros.push(" Altura Inválido!");
+    
+    return erros;
+};
